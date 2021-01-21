@@ -1,60 +1,29 @@
 package com.kodilla.tictactoe;
 
-
 import javafx.geometry.Pos;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class GameTile extends StackPane {
-    private Text text = new Text();
-    private Image imageO = new Image("file:src/main/resources/O_orange.png");
-    private Image imageX = new Image("file:src/main/resources/X_space.png");
-    private boolean turnX = true;
+    int idNum;
+    Text text = new Text();
 
-
-    public GameTile() {
+    public GameTile(Controller controller) {
         Rectangle border = new Rectangle(200, 200);
-        border.setFill(Color.LIGHTBLUE);
-        border.setStroke(Color.RED);
-        ImageView imgO = new ImageView(imageO);
-        imgO.setFitWidth(100);
-        imgO.setPreserveRatio(true);
-        ImageView imgX = new ImageView(imageX);
-        imgX.setFitWidth(100);
-        imgX.setPreserveRatio(true);
-
-
+        border.setFill(null);
+        border.setStroke(Color.color(0, 0, 0, 0));
         setAlignment(Pos.CENTER);
-        getChildren().addAll(border);
+        getChildren().addAll(border, text);
+        text.setFont(Font.font(0));
 
-        setOnMouseClicked(event -> {
-            if (event.getButton() == MouseButton.PRIMARY) {
-                if (!turnX)
-                    return;
-                getChildren().add(imgX);
-                turnX = false;
-            } else if (event.getButton() == MouseButton.SECONDARY) {
-                if(turnX)
-                    return;
-            getChildren().add(imgO);
-            turnX = true;
-            }
+        setOnMouseClicked( event -> {
+            GameTile src = (GameTile) event.getSource();
+            controller.startPlayer(src);
+            controller.cmpMove();
         });
     }
-
-    private void turnr() {
-        ImageView imgX = new ImageView(imageO);
-
-
-
-    }
-    private void turn() {
-        text.setText("O");
-    }
-
 }
