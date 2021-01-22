@@ -27,8 +27,8 @@ public class TicTacToe extends Application {
             for (int j = 0; j < 3; j++) {
 
                 GameTile gameTile = new GameTile(controller);
-                gameTile.setTranslateX(i * 200);
-                gameTile.setTranslateY(j * 200);
+                gameTile.setTranslateX(j * 200);
+                gameTile.setTranslateY(i * 200);
                 tileCounter++;
                 gameTile.idNum = tileCounter;
 
