@@ -8,6 +8,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class GameTile extends StackPane {
+
     int idNum;
     Text text = new Text();
 

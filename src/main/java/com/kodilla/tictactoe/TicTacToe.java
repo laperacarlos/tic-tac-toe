@@ -8,20 +8,21 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class TicTacToe extends Application {
-
-    GridPane root;
+    Pane root = new Pane();
     Controller controller;
 
+
     private Parent gameScene() {
-        root = new GridPane();
-        controller = new Controller(root);
+
+        controller = new Controller();
         Image bckg = new Image("file:src/main/resources/TTT_table.jpg");
         BackgroundSize bckgSize = new BackgroundSize(600, 600, true, true, true , false);
         BackgroundImage bckgImage = new BackgroundImage(bckg, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, bckgSize);
         root.setPrefSize(600, 800);
         root.setBackground(new Background(bckgImage));
 
-        int tileCounter = 0;
+
+        int tileMarker = 0;
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -29,12 +30,19 @@ public class TicTacToe extends Application {
                 GameTile gameTile = new GameTile(controller);
                 gameTile.setTranslateX(j * 200);
                 gameTile.setTranslateY(i * 200);
-                tileCounter++;
-                gameTile.idNum = tileCounter;
+                tileMarker++;
+                gameTile.idNum = tileMarker;
 
-                root.getChildren().add(gameTile);
+                root.getChildren().addAll(gameTile);
+                controller.addTileToListOfMoves(gameTile);
             }
         }
+
+        LabelTile labelTile = new LabelTile();
+        labelTile.setTranslateX(0);
+        labelTile.setTranslateY(600);
+        root.getChildren().add(labelTile);
+
         return root;
     }
 
