@@ -15,7 +15,6 @@ public class WinCombos {
         winCombos.add(new HashSet<>(Arrays.asList(3, 6, 9)));
         winCombos.add(new HashSet<>(Arrays.asList(1, 5, 9)));
         winCombos.add(new HashSet<>(Arrays.asList(3, 5, 7)));
-        winCombos.forEach(System.out::println);
     }
 
     public List<Set<Integer>> getWinCombos() {

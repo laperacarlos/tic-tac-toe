@@ -17,7 +17,6 @@ public class Controller {
     boolean oIsWin = false;
     boolean draw = false;
 
-
     public Controller() {
     }
 
@@ -29,9 +28,6 @@ public class Controller {
         if (oIsWin||xIsWin||draw)
             return;
 
-        //List<GameTile> listToMove = root.getChildren().stream()
-          //      .filter(tile -> tile instanceof GameTile)
-            //    .map(tile -> ((GameTile) tile))
         List<GameTile> listToMove = listOfMoves.stream()
                 .filter(tile -> tile.text.getText().equals(""))
                 .collect(Collectors.toList());
@@ -80,7 +76,11 @@ public class Controller {
             System.out.println("Remis");
             draw = true;
         }
+    }
 
+    public boolean comboCheck(Set<Integer> tiles) {
+        return winSets.getWinCombos().stream()
+                .anyMatch(tiles::containsAll);
     }
 
     public void resetGame() {
@@ -93,12 +93,6 @@ public class Controller {
         xTiles.clear();
         oTiles.clear();
         listOfMoves.forEach(t -> t.text.setText(""));
-
-    }
-
-    public boolean comboCheck(Set<Integer> tiles) {
-        return winSets.getWinCombos().stream()
-                .anyMatch(tiles::containsAll);
     }
 
     public void addTileToListOfMoves(GameTile gameTile) {

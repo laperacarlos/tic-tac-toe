@@ -19,11 +19,13 @@ public class GameTile extends StackPane {
         border.setStroke(Color.color(0, 0, 0, 0));
         setAlignment(Pos.CENTER);
         getChildren().addAll(border, text);
-        text.setFont(Font.font(30));
+        text.setFont(Font.font(0));
 
         setOnMouseClicked( event -> {
             GameTile src = (GameTile) event.getSource();
-            controller.startPlayer(src);
+            if (src.text.getText().isEmpty()) {
+                controller.startPlayer(src);
+            }
         });
     }
 }

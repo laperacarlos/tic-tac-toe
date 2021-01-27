@@ -1,11 +1,15 @@
 package com.kodilla.tictactoe;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class TicTacToe extends Application {
@@ -17,10 +21,20 @@ public class TicTacToe extends Application {
     private final BackgroundSize bckgSize = new BackgroundSize(600, 600, true, true, true , false);
     private final BackgroundImage bckgImage = new BackgroundImage(bckg, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, bckgSize);
 
-    private final Button resetButton = new Button("New game");
-    private final BackgroundSize resetBtnSize = new BackgroundSize(200, 100, true, false, true , false);
+    private final Button nxtRoundButton = new Button("Next Round");
+    private final BackgroundSize nxtRoundBtnSize = new BackgroundSize(200, 100, true, false, true , false);
     private final Image greenButton = new Image("file:src/main/resources/Green_button.png");
-    private final BackgroundImage resetBtnImage = new BackgroundImage(greenButton, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, resetBtnSize);
+    private final BackgroundImage nxtRoundBtnImage = new BackgroundImage(greenButton, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, nxtRoundBtnSize);
+
+    private final Button newGameButton = new Button();
+    private final BackgroundSize newGameBtnSize = new BackgroundSize(200, 100, true, false, true , false);
+    private final Image blueButton = new Image("file:src/main/resources/newGameButton.png");
+    private final BackgroundImage newGameBtnImage = new BackgroundImage(blueButton, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, newGameBtnSize);
+
+    private final Label winLabelBlue = new Label("SpaceX has won the game!!!\nIf you want to play again press \n\"NEW GAME\"!");
+    private final BackgroundSize winLabelBlueSize = new BackgroundSize(500, 500, true, false, true , false);
+    private final Image blueLabel = new Image("file:src/main/resources/ButBlue.png");
+    private final BackgroundImage winLabelBlueImage = new BackgroundImage(blueLabel, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, winLabelBlueSize);
 
     private final Label xWinsLabel = new Label();
     private final Label oWinsLabel = new Label();
@@ -30,17 +44,18 @@ public class TicTacToe extends Application {
     private int oWins = 0;
     private int draws = 0;
 
-    void cleanUp() {
-        rootGameScene.getChildren().clear();
-        controller.resetGame();
-
-    }
-    void nextRound () {
-        controller.nextRound();
+    boolean roundCheck() {
+        return (xWins + oWins + draws == 3);
     }
 
-    void restart(Stage stage) {
-       // cleanUp();
+    void nextGame (Stage stage) {
+        oWins = 0;
+        xWins = 0;
+        draws = 0;
+        startGame(stage);
+    }
+
+    void pointsCounter() {
         if (controller.xIsWin) {
             xWins++;
         } else if (controller.oIsWin) {
@@ -48,13 +63,15 @@ public class TicTacToe extends Application {
         } else if (controller.draw) {
             draws++;
         }
+    }
+
+    void nextRound(Stage stage) {
         startGame(stage);
     }
 
     void startGame(Stage stage) {
         rootGameScene = new Pane();
         controller = new Controller();
-
 
         rootGameScene.setPrefSize(600, 800);
         rootGameScene.setBackground(new Background(bckgImage));
@@ -74,20 +91,58 @@ public class TicTacToe extends Application {
                 controller.addTileToListOfMoves(gameTile);
             }
         }
-        rootGameScene.setTranslateX(0);
-        rootGameScene.setTranslateY(0);
 
-        resetButton.setPrefSize(200, 100);
-        resetButton.setBackground(new Background(resetBtnImage));
-        resetButton.setTranslateX(50);
-        resetButton.setTranslateY(650);
+        winLabelBlue.setPrefSize(500, 500);
+        winLabelBlue.setBackground(new Background(winLabelBlueImage));
+        winLabelBlue.setTranslateX(50);
+        winLabelBlue.setTranslateY(50);
+        winLabelBlue.setFont(new Font("Arial", 30));
+        winLabelBlue.setTextAlignment(TextAlignment.CENTER);
+        winLabelBlue.setTextFill(Color.GREENYELLOW);
+        winLabelBlue.setAlignment(Pos.CENTER);
 
-        resetButton.setOnAction( e -> {
-            //controller.resetGame();
-            restart(stage);
-            //nextRound();
+        nxtRoundButton.setPrefSize(200, 100);
+        nxtRoundButton.setBackground(new Background(nxtRoundBtnImage));
+
+        nxtRoundButton.setTranslateX(50);
+        nxtRoundButton.setTranslateY(600);
+        nxtRoundButton.setDisable(false);
+        nxtRoundButton.setAlignment(Pos.CENTER);
+
+        nxtRoundButton.setOnAction( e -> {
+            pointsCounter();
+            xWinsLabel.setText("SpaceX number of wins: " + xWins);
+            oWinsLabel.setText("WirdO number of wins: " + oWins);
+            drawsLabel.setText("Number of draws: " + draws);
+
+            if (roundCheck()) {
+                if (xWins > oWins) {
+                    rootGameScene.getChildren().add(winLabelBlue);
+                } else if (oWins > xWins) {
+                    winLabelBlue.setText("WeirdO has won the game!!!\nIf you want to play again press \n\"NEW GAME\"!");
+                    rootGameScene.getChildren().add(winLabelBlue);
+                } else {
+                    winLabelBlue.setText("The game ends with a draw!\nIf you want to play again press \n\"NEW GAME\"!");
+                    System.out.println("Remis");
+                }
+                nxtRoundButton.setDisable(true);
+                rootGameScene.getChildren().stream()
+                        .filter(tile -> tile instanceof GameTile)
+                        .map(tile -> ((GameTile) tile))
+                        .forEach(tile -> tile.setDisable(true));
+            } else {
+                nextRound(stage);
+            }
         });
-        rootGameScene.getChildren().add(resetButton);
+        rootGameScene.getChildren().add(nxtRoundButton);
+
+        newGameButton.setPrefSize(200, 100);
+        newGameButton.setBackground(new Background(newGameBtnImage));
+        newGameButton.setAlignment(Pos.CENTER);
+        newGameButton.setTranslateX(50);
+        newGameButton.setTranslateY(700);
+        newGameButton.setOnAction( e -> nextGame(stage));
+        rootGameScene.getChildren().add(newGameButton);
 
         xWinsLabel.setPrefSize(200, 100);
         xWinsLabel.setTranslateX(400);
@@ -108,14 +163,12 @@ public class TicTacToe extends Application {
         rootGameScene.getChildren().add(oWinsLabel);
         rootGameScene.getChildren().add(drawsLabel);
 
-
         Scene scene = new Scene(rootGameScene, 600, 800);
 
         stage.setTitle("Tic-Tac-Toe");
         stage.setScene(scene);
         stage.show();
     }
-
 
     @Override
     public void start(Stage primaryStage) throws Exception {
