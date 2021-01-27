@@ -13,7 +13,10 @@ public class Controller {
     private final List<GameTile> listOfMoves = new ArrayList<>();
     private final Set<Integer> xTiles = new HashSet<>();
     private final Set<Integer> oTiles = new HashSet<>();
-    boolean isWin = false;
+    boolean xIsWin = false;
+    boolean oIsWin = false;
+    boolean draw = false;
+
 
     public Controller() {
     }
@@ -23,7 +26,7 @@ public class Controller {
         imgO.setFitWidth(100);
         imgO.setPreserveRatio(true);
 
-        if (isWin)
+        if (oIsWin||xIsWin||draw)
             return;
 
         //List<GameTile> listToMove = root.getChildren().stream()
@@ -52,7 +55,7 @@ public class Controller {
 
         if (!gameTile.text.getText().isEmpty())
             return;
-        if (isWin)
+        if (xIsWin||oIsWin||draw)
             return;
 
         gameTile.text.setText("X");
@@ -68,19 +71,28 @@ public class Controller {
         if (comboCheck(xTiles) || comboCheck(oTiles)) {
             if (comboCheck(xTiles)) {
                 System.out.println("Wygrały X");
-                isWin = true;
+                xIsWin = true;
             } else if (comboCheck(oTiles)) {
                 System.out.println("Wygrały O");
-                isWin = true;
+                oIsWin= true;
             }
         } else if ((xTiles.size() == 4 && oTiles.size() == 5) || (xTiles.size() == 5 && oTiles.size() == 4)) {
             System.out.println("Remis");
-            isWin = true;
+            draw = true;
         }
 
     }
 
-    public void endOfGame() {
+    public void resetGame() {
+        xTiles.clear();
+        oTiles.clear();
+        listOfMoves.clear();
+    }
+
+    public void nextRound() {
+        xTiles.clear();
+        oTiles.clear();
+        listOfMoves.forEach(t -> t.text.setText(""));
 
     }
 
@@ -92,9 +104,4 @@ public class Controller {
     public void addTileToListOfMoves(GameTile gameTile) {
         listOfMoves.add(gameTile);
     }
-
-
-
-
-
 }
