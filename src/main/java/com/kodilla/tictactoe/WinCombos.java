@@ -16,8 +16,9 @@ public class WinCombos {
         winCombos.add(new HashSet<>(Arrays.asList(1, 5, 9)));
         winCombos.add(new HashSet<>(Arrays.asList(3, 5, 7)));
     }
-
-    public List<Set<Integer>> getWinCombos() {
-        return winCombos;
+    public boolean comboCheck(Set<Integer> tiles) {
+        return winCombos.stream()
+                .anyMatch(tiles::containsAll);
     }
+
 }
