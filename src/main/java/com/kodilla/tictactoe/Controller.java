@@ -16,18 +16,17 @@ public class Controller {
     private final Set<Integer> xTiles = new HashSet<>();
     private final Set<Integer> oTiles = new HashSet<>();
     private final AlertInfo alertInfo = new AlertInfo();
-    boolean xIsWin = false;
-    boolean oIsWin = false;
-    boolean draw = false;
+    private final Map<Integer, GameTile> mapListOfMoves = new HashMap<>();
+    private boolean xIsWin;
+    private boolean oIsWin;
+    private boolean draw;
     boolean playerPlayX = true;
-
-    //boolean playerPlayO;
-    boolean difficultLevel1;
+    boolean level1 = true;
 
     public Controller() {
     }
 
-    public void cmpMove() {
+    private void cmpMoveHard() {
         ImageView imgX = new ImageView(imageX);
         ImageView imgO = new ImageView(imageO);
         imgX.setFitWidth(100);
@@ -38,14 +37,11 @@ public class Controller {
         if (oIsWin || xIsWin || draw)
             return;
 
-        List<GameTile> listToMove = listOfMoves.stream()
-                .filter(tile -> tile.text.getText().equals(""))
-                .collect(Collectors.toList());
+        GameTile cmpTile = level0Move();
 
-        //Tu rozkminić kod od zaawansowanego ruchu kompa
-        Random generator = new Random();
-        int cmpId = generator.nextInt(listToMove.size());
-        GameTile cmpTile = listToMove.get(cmpId);
+        if (level1) {
+           cmpTile = level1Move();
+        }
 
         if(playerPlayX) {
             cmpTile.text.setText("0");
@@ -58,6 +54,7 @@ public class Controller {
             cmpTile.getChildren().add(imgX);
             System.out.println(xTiles);
         }
+        mapListOfMoves.remove(cmpTile.idNum);
         gameCheck();
     }
 
@@ -85,12 +82,12 @@ public class Controller {
             gameTile.getChildren().add(imgO);
             System.out.println(oTiles);
         }
-
+        mapListOfMoves.remove(gameTile.idNum);
         gameCheck();
-        cmpMove();
+        cmpMoveHard();
     }
 
-    public void gameCheck() {
+    private void gameCheck() {
 
         if (winSets.comboCheck(xTiles)) {
             alertInfo.setAlert("SpaceX has won!");
@@ -104,19 +101,74 @@ public class Controller {
         }
     }
 
-    public void resetGame() {
-        xTiles.clear();
-        oTiles.clear();
-        listOfMoves.clear();
+    private GameTile level0Move() {
+        List<GameTile> listToMove = listOfMoves.stream()
+                .filter(tile -> tile.text.getText().equals(""))
+                .collect(Collectors.toList());
+
+        Random generator = new Random();
+        int cmpId = generator.nextInt(listToMove.size());
+        return listToMove.get(cmpId);
     }
 
-    public void nextRound() {
-        xTiles.clear();
-        oTiles.clear();
-        listOfMoves.forEach(t -> t.text.setText(""));
+    private GameTile level1Move() {
+        Set<Integer> tileList;
+        if (playerPlayX) {
+            tileList = oTiles;
+        } else {
+            tileList = xTiles;
+        }
+
+        GameTile cmpTile = null;
+        if (mapListOfMoves.containsKey(5)) {
+            cmpTile = mapListOfMoves.get(5);
+        } else if(mapListOfMoves.containsKey(1)) {
+            cmpTile = mapListOfMoves.get(1);
+        }  else if(mapListOfMoves.containsKey(9) && tileList.contains(5) && tileList.contains(1)) {
+            cmpTile = mapListOfMoves.get(9);
+        } else if(mapListOfMoves.containsKey(2)) {
+            cmpTile = mapListOfMoves.get(2);
+        } else if(mapListOfMoves.containsKey(3) && tileList.contains(1) && tileList.contains(2)) {
+            cmpTile = mapListOfMoves.get(3);
+        } else if(mapListOfMoves.containsKey(8) && tileList.contains(5) && tileList.contains(2)) {
+            cmpTile = mapListOfMoves.get(8);
+        } else if(mapListOfMoves.containsKey(7) && tileList.contains(1) && tileList.contains(4)) {
+            cmpTile = mapListOfMoves.get(7);
+        } else if(mapListOfMoves.containsKey(6) && tileList.contains(4) && tileList.contains(5)) {
+            cmpTile = mapListOfMoves.get(6);
+        }else if(mapListOfMoves.containsKey(4)) {
+            cmpTile = mapListOfMoves.get(4);
+        } else if(mapListOfMoves.containsKey(3)) {
+            cmpTile = mapListOfMoves.get(3);
+        } else if(mapListOfMoves.containsKey(7)) {
+            cmpTile = mapListOfMoves.get(7);
+        } else if(mapListOfMoves.containsKey(6)) {
+            cmpTile = mapListOfMoves.get(6);
+        } else if(mapListOfMoves.containsKey(8)) {
+            cmpTile = mapListOfMoves.get(8);
+        } else if(mapListOfMoves.containsKey(9)) {
+            cmpTile = mapListOfMoves.get(9);
+        }
+        return cmpTile;
     }
 
     public void addTileToListOfMoves(GameTile gameTile) {
         listOfMoves.add(gameTile);
+    }
+
+    public void addTileToMapOfMoves(Integer number, GameTile gameTile) {
+        mapListOfMoves.put(number, gameTile);
+    }
+
+    public boolean isxIsWin() {
+        return xIsWin;
+    }
+
+    public boolean isoIsWin() {
+        return oIsWin;
+    }
+
+    public boolean isDraw() {
+        return draw;
     }
 }

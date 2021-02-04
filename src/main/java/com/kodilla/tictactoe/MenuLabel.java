@@ -15,7 +15,7 @@ public class MenuLabel extends GridPane {
 
     private final TextField number = new TextField();
     private boolean playerPlayX = true;
-    //private boolean playerPlayO = false;
+    private boolean level1;
 
     public MenuLabel() {
         setPrefSize(500, 500);
@@ -45,10 +45,38 @@ public class MenuLabel extends GridPane {
         numberOfRounds.setTranslateY(100);
         numberOfRounds.setFont(Font.font(25));
 
-        Label difficult = new Label("Chose difficult level");
+        Label difficult = new Label("Chose difficult level:");
         difficult.setTranslateX(50);
         difficult.setTranslateY(200);
         difficult.setFont(Font.font(25));
+
+        Button easyButton = new Button();
+        easyButton.setPrefWidth(107);
+        easyButton.setTranslateX(270);
+        easyButton.setTranslateY(200);
+        easyButton.setStyle("-fx-background-color: transparent;");
+        easyButton.setText("EASY");
+        easyButton.setFont(Font.font(22));
+
+        Button easyPlusButton = new Button();
+        easyPlusButton.setPrefWidth(107);
+        easyPlusButton.setTranslateX(380);
+        easyPlusButton.setTranslateY(200);
+        easyPlusButton.setStyle("-fx-background-color: transparent;");
+        easyPlusButton.setText("EASY+");
+        easyPlusButton.setFont(Font.font(22));
+
+        easyButton.setOnMouseClicked(event -> {
+            easyButton.setStyle("-fx-border-color: blue;" + "-fx-border-width: 2, 2;" + "-fx-background-color: transparent;");
+            level1 = false;
+            easyPlusButton.setStyle("-fx-background-color: transparent;");
+        });
+
+        easyPlusButton.setOnMouseClicked(event -> {
+            easyPlusButton.setStyle("-fx-border-color: blue;" + "-fx-border-width: 2, 2;" + "-fx-background-color: transparent;");
+            level1 = true;
+            easyButton.setStyle("-fx-background-color: transparent;");
+        });
 
         Label figure = new Label("Chose your figure: ");
         figure.setTranslateX(50);
@@ -79,18 +107,16 @@ public class MenuLabel extends GridPane {
         oButton.setOnMouseClicked(event -> {
             oButton.setStyle("-fx-border-color: blue;" + "-fx-border-width: 2, 2;" + "-fx-background-color: transparent;");
             playerPlayX = false;
-            //playerPlayO = true;
             xButton.setStyle("-fx-background-color: transparent;");
         });
 
         xButton.setOnMouseClicked(event -> {
             xButton.setStyle("-fx-border-color: blue;" + "-fx-border-width: 2, 2;" + "-fx-background-color: transparent;");
             playerPlayX = true;
-            //playerPlayO = false;
             oButton.setStyle("-fx-background-color: transparent;");
         });
 
-        getChildren().addAll(difficult, numberOfRounds, figure, menu, number, xButton, oButton);
+        getChildren().addAll(difficult, numberOfRounds, figure, menu, number, xButton, oButton, easyPlusButton, easyButton);
     }
 
     public int getNumberToPlay() {
@@ -106,8 +132,8 @@ public class MenuLabel extends GridPane {
         return playerPlayX;
     }
 
-    //public boolean isPlayerPlayO() {
-        //return playerPlayO;
-
+    public boolean isLevel1() {
+        return level1;
+    }
 }
 

@@ -54,6 +54,7 @@ public class TicTacToe extends Application {
     private int draws = 0;
     private int numberOfGames = 0;
     boolean playerPlayX;
+    boolean level1;
 
     boolean roundCheck() {
         return xWins + oWins + draws == numberOfGames;
@@ -64,15 +65,14 @@ public class TicTacToe extends Application {
         xWins = 0;
         draws = 0;
         startGame(stage);
-
     }
 
     private void pointsCounter() {
-        if (controller.xIsWin) {
+        if (controller.isxIsWin()) {
             xWins++;
-        } else if (controller.oIsWin) {
+        } else if (controller.isoIsWin()) {
             oWins++;
-        } else if (controller.draw) {
+        } else if (controller.isDraw()) {
             draws++;
         }
     }
@@ -84,7 +84,6 @@ public class TicTacToe extends Application {
     void startGame(Stage stage) {
         rootGameScene = new Pane();
         controller = new Controller();
-
 
         rootGameScene.setPrefSize(600, 800);
         rootGameScene.setBackground(new Background(bckgImage));
@@ -103,6 +102,7 @@ public class TicTacToe extends Application {
 
                 rootGameScene.getChildren().addAll(gameTile);
                 controller.addTileToListOfMoves(gameTile);
+                controller.addTileToMapOfMoves(tileMarker, gameTile);
             }
         }
 
@@ -117,12 +117,10 @@ public class TicTacToe extends Application {
 
         nxtRoundButton.setPrefSize(200, 100);
         nxtRoundButton.setBackground(new Background(nxtRoundBtnImage));
-
         nxtRoundButton.setTranslateX(50);
         nxtRoundButton.setTranslateY(600);
         nxtRoundButton.setDisable(true);
         nxtRoundButton.setAlignment(Pos.CENTER);
-
         nxtRoundButton.setOnAction( e -> {
             pointsCounter();
             xWinsLabel.setText("SpaceX number of wins: " + xWins);
@@ -150,10 +148,10 @@ public class TicTacToe extends Application {
                         .map(tile -> ((GameTile) tile))
                         .forEach(tile -> tile.setDisable(false));
                 controller.playerPlayX = playerPlayX;
+                controller.level1 = level1;
                 nxtRoundButton.setDisable(false);
             }
         });
-        rootGameScene.getChildren().add(nxtRoundButton);
 
         newGameButton.setPrefSize(200, 100);
         newGameButton.setBackground(new Background(newGameBtnImage));
@@ -166,7 +164,6 @@ public class TicTacToe extends Application {
             playButton.setVisible(true);
         });
 
-
         playButton.setBackground(new Background(playBckgImage));
         playButton.setPrefSize(200, 70);
         playButton.setTranslateY(450);
@@ -176,6 +173,8 @@ public class TicTacToe extends Application {
             numberOfGames = menuLabel.getNumberToPlay();
             playerPlayX = menuLabel.isPlayerPlayX();
             controller.playerPlayX = playerPlayX;
+            level1 = menuLabel.isLevel1();
+            controller.level1 = level1;
             playButton.setVisible(false);
             menuLabel.setVisible(false);
             nxtRoundButton.setDisable(false);
@@ -183,7 +182,6 @@ public class TicTacToe extends Application {
                     .filter(tile -> tile instanceof GameTile)
                     .map(tile -> ((GameTile) tile))
                     .forEach(tile -> tile.setDisable(false));
-           //controller.playerPlayO = menuLabel.isPlayerPlayO();
         });
 
         xWinsLabel.setPrefSize(200, 100);
@@ -204,6 +202,7 @@ public class TicTacToe extends Application {
         rootGameScene.getChildren().add(xWinsLabel);
         rootGameScene.getChildren().add(oWinsLabel);
         rootGameScene.getChildren().add(drawsLabel);
+        rootGameScene.getChildren().add(nxtRoundButton);
         rootGameScene.getChildren().add(menuLabel);
         rootGameScene.getChildren().add(playButton);
         rootGameScene.getChildren().add(newGameButton);
@@ -217,7 +216,11 @@ public class TicTacToe extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        startGame(primaryStage);
+       try {
+           startGame(primaryStage);
+       } catch (Exception e) {
+           throw new Exception();
+       }
     }
 
     public static void main(String[] args) {
