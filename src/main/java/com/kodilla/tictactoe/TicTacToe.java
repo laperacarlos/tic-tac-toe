@@ -53,10 +53,10 @@ public class TicTacToe extends Application {
     private int oWins = 0;
     private int draws = 0;
     private int numberOfGames = 0;
-    boolean playerPlayX;
-    boolean level1;
+    private boolean playerPlayX;
+    private boolean level1;
 
-    boolean roundCheck() {
+    private boolean roundCheck() {
         return xWins + oWins + draws == numberOfGames;
     }
 
@@ -97,7 +97,7 @@ public class TicTacToe extends Application {
                 gameTile.setTranslateX(j * 200);
                 gameTile.setTranslateY(i * 200);
                 tileMarker++;
-                gameTile.idNum = tileMarker;
+                gameTile.setIdNum(tileMarker);
                 gameTile.setDisable(true);
 
                 rootGameScene.getChildren().addAll(gameTile);
@@ -147,8 +147,8 @@ public class TicTacToe extends Application {
                         .filter(tile -> tile instanceof GameTile)
                         .map(tile -> ((GameTile) tile))
                         .forEach(tile -> tile.setDisable(false));
-                controller.playerPlayX = playerPlayX;
-                controller.level1 = level1;
+                controller.setPlayerPlayX(playerPlayX);
+                controller.setLevel1(level1);
                 nxtRoundButton.setDisable(false);
             }
         });
@@ -172,9 +172,9 @@ public class TicTacToe extends Application {
         playButton.setOnAction( event -> {
             numberOfGames = menuLabel.getNumberToPlay();
             playerPlayX = menuLabel.isPlayerPlayX();
-            controller.playerPlayX = playerPlayX;
+            controller.setPlayerPlayX(playerPlayX);
             level1 = menuLabel.isLevel1();
-            controller.level1 = level1;
+            controller.setLevel1(level1);
             playButton.setVisible(false);
             menuLabel.setVisible(false);
             nxtRoundButton.setDisable(false);
@@ -199,13 +199,7 @@ public class TicTacToe extends Application {
         drawsLabel.setTranslateY(700);
         drawsLabel.setText("Number of draws: " + draws);
 
-        rootGameScene.getChildren().add(xWinsLabel);
-        rootGameScene.getChildren().add(oWinsLabel);
-        rootGameScene.getChildren().add(drawsLabel);
-        rootGameScene.getChildren().add(nxtRoundButton);
-        rootGameScene.getChildren().add(menuLabel);
-        rootGameScene.getChildren().add(playButton);
-        rootGameScene.getChildren().add(newGameButton);
+        rootGameScene.getChildren().addAll(xWinsLabel, oWinsLabel, drawsLabel, nxtRoundButton, menuLabel, playButton, newGameButton);
 
         Scene scene = new Scene(rootGameScene, 600, 800);
 

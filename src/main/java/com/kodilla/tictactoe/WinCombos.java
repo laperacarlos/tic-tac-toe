@@ -20,5 +20,4 @@ public class WinCombos {
         return winCombos.stream()
                 .anyMatch(tiles::containsAll);
     }
-
 }

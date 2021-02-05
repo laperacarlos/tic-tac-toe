@@ -9,8 +9,8 @@ import javafx.scene.text.Text;
 
 public class GameTile extends StackPane {
 
-    int idNum;
-    Text text = new Text();
+    private int idNum;
+    private final Text text = new Text();
 
     public GameTile(Controller controller) {
 
@@ -25,7 +25,24 @@ public class GameTile extends StackPane {
             GameTile src = (GameTile) event.getSource();
             if (src.text.getText().isEmpty()) {
                 controller.startPlayer(src);
+
             }
         });
+    }
+
+    public int getIdNum() {
+        return idNum;
+    }
+
+    public Text getText() {
+        return text;
+    }
+
+    public void setIdNum(int idNum) {
+        this.idNum = idNum;
+    }
+
+    public void setText(String txt) {
+        text.setText(txt);
     }
 }

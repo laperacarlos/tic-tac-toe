@@ -20,13 +20,13 @@ public class Controller {
     private boolean xIsWin;
     private boolean oIsWin;
     private boolean draw;
-    boolean playerPlayX = true;
-    boolean level1 = true;
+    private boolean playerPlayX = true;
+    private boolean level1;
 
     public Controller() {
     }
 
-    private void cmpMoveHard() {
+    private void cmpMove() {
         ImageView imgX = new ImageView(imageX);
         ImageView imgO = new ImageView(imageO);
         imgX.setFitWidth(100);
@@ -44,17 +44,17 @@ public class Controller {
         }
 
         if(playerPlayX) {
-            cmpTile.text.setText("0");
-            oTiles.add(cmpTile.idNum);
+            cmpTile.setText("0");
+            oTiles.add(cmpTile.getIdNum());
             cmpTile.getChildren().add(imgO);
             System.out.println(oTiles);
         } else {
-            cmpTile.text.setText("X");
-            xTiles.add(cmpTile.idNum);
+            cmpTile.setText("X");
+            xTiles.add(cmpTile.getIdNum());
             cmpTile.getChildren().add(imgX);
             System.out.println(xTiles);
         }
-        mapListOfMoves.remove(cmpTile.idNum);
+        mapListOfMoves.remove(cmpTile.getIdNum());
         gameCheck();
     }
 
@@ -66,25 +66,25 @@ public class Controller {
         imgX.setFitWidth(100);
         imgX.setPreserveRatio(true);
 
-        if (!gameTile.text.getText().isEmpty())
+        if (!gameTile.getText().getText().isEmpty())
             return;
         if (xIsWin || oIsWin || draw)
             return;
 
         if(playerPlayX) {
-            gameTile.text.setText("X");
-            xTiles.add(gameTile.idNum);
+            gameTile.setText("X");
+            xTiles.add(gameTile.getIdNum());
             gameTile.getChildren().add(imgX);
             System.out.println(xTiles);
         } else {
-            gameTile.text.setText("O");
-            oTiles.add(gameTile.idNum);
+            gameTile.setText("O");
+            oTiles.add(gameTile.getIdNum());
             gameTile.getChildren().add(imgO);
             System.out.println(oTiles);
         }
-        mapListOfMoves.remove(gameTile.idNum);
+        mapListOfMoves.remove(gameTile.getIdNum());
         gameCheck();
-        cmpMoveHard();
+        cmpMove();
     }
 
     private void gameCheck() {
@@ -103,7 +103,7 @@ public class Controller {
 
     private GameTile level0Move() {
         List<GameTile> listToMove = listOfMoves.stream()
-                .filter(tile -> tile.text.getText().equals(""))
+                .filter(tile -> tile.getText().getText().equals(""))
                 .collect(Collectors.toList());
 
         Random generator = new Random();
@@ -170,5 +170,13 @@ public class Controller {
 
     public boolean isDraw() {
         return draw;
+    }
+
+    public void setPlayerPlayX(boolean playerPlayX) {
+        this.playerPlayX = playerPlayX;
+    }
+
+    public void setLevel1(boolean level1) {
+        this.level1 = level1;
     }
 }
